@@ -2,13 +2,30 @@
 title: "Hello"
 output: html_document
 ---
-
 ```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+source("data.R")
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ```{r}
-set.seed(37)
+modern <- top |>
+  filter(date >= "1980-01-01")
+
+```
+
+```{r}
+artists <- modern |>
+  count(artist) |>
+  arrange(-n) |>
+  filter(! artist %in% c("Soundtrack", "Various Artists"))
+head(artists)
+```
+
+```{r}
+set.seed(42)
 xs <- sample(1:100, 25)
 xs
 ```
@@ -18,3 +35,9 @@ me <- median(xs)
 ```
 
 Median is `r me`.
+
+```{r}
+artists[xs,] |>
+  arrange(-n) |>
+  gt::gt()
+```
